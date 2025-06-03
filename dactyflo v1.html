@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DactyloFacile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        header {
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .menu {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .menu button {
+            background-color: #000000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .menu button:hover {
+            background-color: #333333;
+        }
+        
+        .menu button.active {
+            background-color: #444444;
+            font-weight: bold;
+        }
+        
+        .typing-area {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .text-display {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            min-height: 100px;
+            line-height: 1.8;
+        }
+        
+        .highlight {
+            background-color: #ffeb3b;
+        }
+        
+        .correct {
+            color: #4caf50;
+        }
+        
+        .incorrect {
+            color: #f44336;
+            text-decoration: underline;
+        }
+        
+        .current {
+            background-color: #e1f5fe;
+            border-bottom: 2px solid #2196f3;
+        }
+        
+        .input-area {
+            margin-top: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #4a6fa5;
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .stat-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4a6fa5;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .keyboard {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        
+        .key {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-width: 30px;
+            height: 35px;
+            margin: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: default;
+        }
+        
+        .key.highlight-key {
+            background-color: #4a6fa5;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .key.space {
+            width: 250px;
+        }
+        
+        .instructions {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0px rgba(74, 111, 165, 0.7); }
+            100% { box-shadow: 0 0 0 10px rgba(74, 111, 165, 0); }
+        }
+        
+        .finger-guide {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .finger-guide img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        
+        .progress-container {
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DactyFlo</h1>
+    </header>
+    
+    <div class="container">
+        <div class="menu">
+            <button id="level1" class="active">Niveau 1: Répétitions</button>
+            <button id="level2">Niveau 2: Mots courts</button>
+            <button id="level3">Niveau 3: Débutant</button>
+            <button id="level4">Niveau 4: Intermédiaire</button>
+            <button id="level5">Niveau 5: Avancé</button>
+        </div>
+        
+        <div class="typing-area">
+            <div class="text-display" id="textDisplay"></div>
+            <div class="input-area">
+                <textarea id="userInput" placeholder="Commencez à taper ici..."></textarea>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value" id="wpmStat">0</div>
+                <div class="stat-label">Mots par minute</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="accuracyStat">0%</div>
+                <div class="stat-label">Précision</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="timeStat">0:00</div>
+                <div class="stat-label">Temps écoulé</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="progressStat">0%</div>
+                <div class="stat-label">Progression</div>
+            </div>
+        </div>
+        
+        <div class="keyboard" id="keyboard">
+            <div class="keyboard-row">
+                <div class="key">1</div>
+                <div class="key">2</div>
+                <div class="key">3</div>
+                <div class="key">4</div>
+                <div class="key">5</div>
+                <div class="key">6</div>
+                <div class="key">7</div>
+                <div class="key">8</div>
+                <div class="key">9</div>
+                <div class="key">0</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key">A</div>
+                <div class="key">Z</div>
+                <div class="key">E</div>
+                <div class="key">R</div>
+                <div class="key">T</div>
+                <div class="key">Y</div>
+                <div class="key">U</div>
+                <div class="key">I</div>
+                <div class="key">O</div>
+                <div class="key">P</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key">Q</div>
+                <div class="key">S</div>
+                <div class="key">D</div>
+                <div class="key">F</div>
+                <div class="key">G</div>
+                <div class="key">H</div>
+                <div class="key">J</div>
+                <div class="key">K</div>
+                <div class="key">L</div>
+                <div class="key">M</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key">W</div>
+                <div class="key">X</div>
+                <div class="key">C</div>
+                <div class="key">V</div>
+                <div class="key">B</div>
+                <div class="key">N</div>
+                <div class="key">,</div>
+                <div class="key">;</div>
+                <div class="key">:</div>
+                <div class="key">!</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key space">Espace</div>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <h3>Votre progression</h3>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2>Comment utiliser DactyloFacile</h2>
+            <p>1. Choisissez votre niveau de difficulté dans le menu ci-dessus.</p>
+            <p>2. Regardez le texte affiché et commencez à le taper dans la zone de texte.</p>
+            <p>3. Essayez de garder vos doigts sur la rangée médiane du clavier (QSDFGHJKLM).</p>
+            <p>4. Ne regardez pas vos doigts pendant que vous tapez, concentrez-vous sur l'écran.</p>
+            <p>5. Suivez vos statistiques pour voir votre progression au fil du temps.</p>
+            
+            <div class="finger-guide">
+                <h3>Position des doigts</h3>
+                <p>Pour taper efficacement, placez vos doigts comme indiqué ci-dessous:</p>
+                <p>• Petit doigt gauche: A et Q<br>
+                • Annulaire gauche: Z et S<br>
+                • Majeur gauche: E et D<br>
+                • Index gauche: R, F, T, G, V, B<br>
+                • Pouce: Barre d'espace<br>
+                • Index droit: Y, H, U, J, N, M<br>
+                • Majeur droit: I et K<br>
+                • Annulaire droit: O et L<br>
+                • Petit doigt droit: P</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Textes d'exercices par niveau
+        const texts = {
+            level1: [
+                "jjff jjff jjff jjff jjff jjff jjff jjff jjff jjff",
+                "aapp aapp aapp aapp aapp aapp aapp aapp aapp aapp",
+                "qqmm qqmm qqmm qqmm qqmm qqmm qqmm qqmm qqmm qqmm",
+                "zzll zzll zzll zzll zzll zzll zzll zzll zzll zzll",
+                "eekk eekk eekk eekk eekk eekk eekk eekk eekk eekk",
+                "rrjj rrjj rrjj rrjj rrjj rrjj rrjj rrjj rrjj rrjj",
+                "ttnn ttnn ttnn ttnn ttnn ttnn ttnn ttnn ttnn ttnn",
+                "yyuu yyuu yyuu yyuu yyuu yyuu yyuu yyuu yyuu yyuu",
+                "iioo iioo iioo iioo iioo iioo iioo iioo iioo iioo",
+                "gghh gghh gghh gghh gghh gghh gghh gghh gghh gghh"
+            ],
+            level2: [
+                "ami vue sac bol pot fil ski lac mer jeu sud roi",
+                "par moi oui non peu ici lui âne île axe gaz sel",
+                "bon lit art bus eau vie riz gel mur nez pli feu",
+                "car vin dés dos thé sol cri mai gré blé ail mai",
+                "air vue sac bas col fou lie dîne une épi tas bel",
+                "acte être cube dire ému fade gare idée jade kaki",
+                "lire mère nage pire quai rame sage thé user vélo",
+                "zone yoga taxi site lune pôle îlot banc code pile",
+                "voix jupe rail main zèle élan base chat doux fête",
+                "gant huile iode jour kiwi logo mine neuf ours pneu"
+            ],
+            level3: [
+                "azertyuiop azertyuiop azertyuiop azertyuiop azertyuiop azertyuiop",
+                "qsdfghjklm qsdfghjklm qsdfghjklm qsdfghjklm qsdfghjklm qsdfghjklm",
+                "wxcvbn,;:! wxcvbn,;:! wxcvbn,;:! wxcvbn,;:! wxcvbn,;:! wxcvbn,;:!",
+                "az er ty ui op az er ty ui op jk lm qs df gh jk lm qs df gh jk lm"
+            ],
+            level4: [
+                "Les doigts sur le clavier doivent être bien positionnés.",
+                "Je tape sans regarder mes doigts pour être plus efficace.",
+                "La pratique quotidienne est la clé du succès en dactylographie.",
+                "Gardez un rythme régulier et votre vitesse augmentera naturellement."
+            ],
+            level5: [
+                "L'apprentissage de la dactylographie nécessite de la patience et de la persévérance, mais les résultats en valent la peine.",
+                "Avec une bonne technique, vous pouvez taper rapidement et sans erreur, ce qui vous fait gagner du temps au quotidien.",
+                "Les meilleurs dactylos ne regardent jamais leur clavier et gardent toujours les yeux sur l'écran pendant qu'ils tapent.",
+                "La dactylographie est une compétence précieuse dans notre monde numérique, où la communication écrite est omniprésente.",
+                "L'écriture manuscrite devient progressivement obsolète dans certains contextes, remplacée par la saisie au clavier qui est plus rapide et plus adaptée à l'ère numérique dans laquelle nous vivons aujourd'hui.",
+                "Un dactylo expert peut atteindre des vitesses dépassant 100 mots par minute, avec une précision presque parfaite, grâce à des années d'entraînement et à une technique rigoureuse.",
+                "La disposition AZERTY des claviers est spécifique à la France et à quelques pays francophones, alors que la majorité du monde utilise la disposition QWERTY, conçue pour les machines à écrire.",
+                "Apprendre à taper sans regarder le clavier est comparable à l'apprentissage d'un instrument de musique : c'est une question de mémoire musculaire qui se développe avec la pratique."
+            ]
+        };
+
+        let currentLevel = "level1";
+        let currentTextIndex = 0;
+        let startTime = null;
+        let timer = null;
+        let correctChars = 0;
+        let totalChars = 0;
+
+        // Éléments DOM
+        const textDisplay = document.getElementById("textDisplay");
+        const userInput = document.getElementById("userInput");
+        const wpmStat = document.getElementById("wpmStat");
+        const accuracyStat = document.getElementById("accuracyStat");
+        const timeStat = document.getElementById("timeStat");
+        const progressStat = document.getElementById("progressStat");
+        const progressBar = document.getElementById("progressBar");
+        const levelButtons = document.querySelectorAll(".menu button");
+
+        // Initialisation
+        function init() {
+            loadText();
+            
+            // Événements des boutons de niveau
+            levelButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    levelButtons.forEach(btn => btn.classList.remove("active"));
+                    this.classList.add("active");
+                    
+                    currentLevel = this.id;
+                    currentTextIndex = 0;
+                    resetExercise();
+                });
+            });
+            
+            // Événement d'entrée utilisateur
+            userInput.addEventListener("input", checkInput);
+            userInput.addEventListener("focus", startTimer);
+        }
+
+        // Charger le texte actuel
+        function loadText() {
+            const currentTexts = texts[currentLevel];
+            const currentText = currentTexts[currentTextIndex];
+            
+            // Afficher le texte
+            textDisplay.innerHTML = "";
+            
+            // Convertir le texte en span pour chaque caractère
+            for(let i = 0; i < currentText.length; i++) {
+                const charSpan = document.createElement("span");
+                charSpan.innerText = currentText[i];
+                textDisplay.appendChild(charSpan);
+            }
+            
+            // Mettre en évidence le premier caractère
+            textDisplay.children[0].classList.add("current");
+            
+            // Mettre à jour la touche de clavier à appuyer
+            highlightKey(currentText[0]);
+        }
+        
+        // Mettre en évidence la touche à appuyer
+        function highlightKey(char) {
+            // Réinitialiser les touches mises en évidence
+            document.querySelectorAll(".highlight-key").forEach(key => {
+                key.classList.remove("highlight-key");
+            });
+            
+            // Convertir en majuscule pour la correspondance du clavier
+            char = char.toUpperCase();
+            
+            // Si c'est un espace
+            if (char === " ") {
+                document.querySelector(".key.space").classList.add("highlight-key");
+                return;
+            }
+            
+            // Trouver la touche correspondante
+            const keys = document.querySelectorAll(".key");
+            for (let key of keys) {
+                if (key.innerText === char) {
+                    key.classList.add("highlight-key");
+                    break;
+                }
+            }
+        }
+
+        // Démarrer le chronomètre
+        function startTimer() {
+            if (!startTime) {
+                startTime = new Date();
+                timer = setInterval(updateTimer, 1000);
+            }
+        }
+
+        // Mettre à jour le chronomètre
+        function updateTimer() {
+            const currentTime = new Date();
+            const timeElapsed = Math.floor((currentTime - startTime) / 1000);
+            
+            const minutes = Math.floor(timeElapsed / 60);
+            const seconds = timeElapsed % 60;
+            
+            timeStat.innerText = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            
+            // Calculer et mettre à jour le WPM
+            if (correctChars > 0) {
+                // On considère qu'un mot fait en moyenne 5 caractères
+                const wpm = Math.round(correctChars / 5 / (timeElapsed / 60));
+                wpmStat.innerText = wpm;
+            }
+        }
+
+        // Vérifier l'entrée de l'utilisateur
+        function checkInput() {
+            const currentTexts = texts[currentLevel];
+            const currentText = currentTexts[currentTextIndex];
+            const userText = userInput.value;
+            
+            // Réinitialiser l'affichage du texte
+            textDisplay.innerHTML = "";
+            
+            correctChars = 0;
+            totalChars = userText.length;
+            
+            // Comparer caractère par caractère
+            for (let i = 0; i < currentText.length; i++) {
+                const charSpan = document.createElement("span");
+                charSpan.innerText = currentText[i];
+                
+                if (i < userText.length) {
+                    if (currentText[i] === userText[i]) {
+                        charSpan.classList.add("correct");
+                        correctChars++;
+                    } else {
+                        charSpan.classList.add("incorrect");
+                    }
+                }
+                
+                // Mettre en évidence le caractère actuel
+                if (i === userText.length) {
+                    charSpan.classList.add("current");
+                    highlightKey(currentText[i]);
+                }
+                
+                textDisplay.appendChild(charSpan);
+            }
+            
+            // Calculer la précision
+            const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 0;
+            accuracyStat.innerText = `${accuracy}%`;
+            
+            // Calculer la progression
+            const progress = Math.min(Math.round((userText.length / currentText.length) * 100), 100);
+            progressStat.innerText = `${progress}%`;
+            progressBar.style.width = `${progress}%`;
+            
+            // Vérifier si l'exercice est terminé
+            if (userText.length === currentText.length && accuracy >= 90) {
+                setTimeout(nextExercise, 1000);
+            }
+        }
+
+        // Passer à l'exercice suivant
+        function nextExercise() {
+            currentTextIndex++;
+            
+            const currentTexts = texts[currentLevel];
+            if (currentTextIndex >= currentTexts.length) {
+                currentTextIndex = 0;
+                alert("Félicitations ! Vous avez terminé tous les exercices de ce niveau.");
+            }
+            
+            resetExercise();
+        }
+
+        // Réinitialiser l'exercice
+        function resetExercise() {
+            clearInterval(timer);
+            startTime = null;
+            correctChars = 0;
+            totalChars = 0;
+            
+            userInput.value = "";
+            wpmStat.innerText = "0";
+            accuracyStat.innerText = "0%";
+            timeStat.innerText = "0:00";
+            progressStat.innerText = "0%";
+            progressBar.style.width = "0%";
+            
+            loadText();
+        }
+
+        // Initialiser l'application
+        window.onload = init;
+    </script>
+</body>
+</html>
